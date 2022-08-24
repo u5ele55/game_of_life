@@ -11,7 +11,7 @@ class _GameViewState extends State<GameView> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(milliseconds: 1500),
+    Timer.periodic(constants.updateDuration,
         (Timer t) => context.read<FieldBloc>().add(UpdateFieldEvent()));
   }
 
@@ -50,13 +50,15 @@ class _GameViewState extends State<GameView> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.pause),
+                    icon: state.status == FieldStatus.playing
+                        ? const Icon(Icons.pause)
+                        : const Icon(Icons.play_arrow),
                     onPressed: () =>
                         context.read<FieldBloc>().add(ToggleStatusEvent()),
                     iconSize: 64,
                   ),
                   IconButton(
-                    icon: Icon(Icons.refresh),
+                    icon: const Icon(Icons.refresh),
                     onPressed: () =>
                         context.read<FieldBloc>().add(InitFieldEvent()),
                     iconSize: 64,

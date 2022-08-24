@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_of_life/blocs/field/field_bloc.dart';
-import 'package:game_of_life/constants/game_sizes.dart';
+import 'package:game_of_life/constants/game.dart';
 import 'package:game_of_life/models/field.dart';
 
 class CellWidget extends StatelessWidget {
@@ -14,7 +14,6 @@ class CellWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.read<FieldBloc>().add(TapCellEvent(cell));
-        print("tap at $cell");
       },
       child: Container(
         height: cellSize,

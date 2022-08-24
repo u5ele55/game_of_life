@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_of_life/constants/game_sizes.dart';
+import 'package:game_of_life/constants/game.dart';
 import 'package:game_of_life/models/field.dart';
 
 part 'field_event.dart';
@@ -24,7 +22,6 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
       newStatus = FieldStatus.playing;
     }
 
-    print("toggle ${state.status} to $newStatus");
     emit(state.copyWith(
       status: newStatus,
     ));
@@ -52,8 +49,7 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
     ));
   }
 
-  void _onUpdateField(UpdateFieldEvent event, Emitter<FieldState> emitt) {
-    print("try upd");
+  void _onUpdateField(UpdateFieldEvent event, Emitter<FieldState> emit) {
     if (state.status != FieldStatus.playing) return;
 
     List<List<GameCell>> newField = List.filled(fieldHeight, []);
@@ -68,14 +64,12 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
           continue;
         } else if (!cell.isAlive && aliveNeighbours == 3) {
           newField[i][j].isAlive = true;
-          print("now $cell is alive");
         } else {
           newField[i][j].isAlive = false;
         }
       }
     }
 
-    print("upd success");
     emit(state.copyWith(
       field: state.field..field = newField,
     ));
