@@ -22,27 +22,30 @@ class _GameViewState extends State<GameView> {
         if (state.status == FieldStatus.initial) {
           return const Center(child: CircularProgressIndicator.adaptive());
         }
+
         return Stack(
           children: [
             Zoom(
+              opacityScrollBars: 0,
               maxZoomWidth: constants.cellSize * constants.fieldWidth,
               maxZoomHeight: constants.cellSize * constants.fieldHeight,
               doubleTapZoom: false,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                    children: (state.field.field ?? [])
-                        .map((list) => SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: Row(
-                                children: list
-                                    .map((cell) => CellWidget(cell: cell))
-                                    .toList(),
-                              ),
-                            ))
-                        .toList()),
+                child: SizedBox(
+                  height: constants.fieldHeight * constants.cellSize,
+                  width: constants.fieldWidth * constants.cellSize,
+                  child: GestureDetector(
+                    onTapUp: (details) => context.read<FieldBloc>().add(
+                        TapCellEvent(Position.fromOffset(
+                            details.localPosition ~/ constants.cellSize))),
+                    child: CustomPaint(
+                      foregroundPainter: FieldPainter(),
+                      painter: CellPainter(state.field),
+                    ),
+                  ),
+                ),
               ),
             ),
             Align(

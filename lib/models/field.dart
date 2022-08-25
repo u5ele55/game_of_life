@@ -1,3 +1,5 @@
+import 'package:flutter/painting.dart';
+
 part 'cell.dart';
 
 class GameField {

@@ -13,7 +13,7 @@ class CellWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<FieldBloc>().add(TapCellEvent(cell));
+        context.read<FieldBloc>().add(TapCellEvent(cell.position));
       },
       child: Container(
         height: cellSize,

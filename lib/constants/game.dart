@@ -1,5 +1,5 @@
-const int fieldHeight = 30;
-const int fieldWidth = 20;
+const int fieldHeight = 500;
+const int fieldWidth = 300;
 
 const double cellSize = 64;
 
