@@ -5,7 +5,7 @@ class FieldPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = Color(0xff995588)
+      ..color = const Color(0xff995588)
       ..strokeWidth = 2;
 
     for (int i = 1; i < fieldWidth; i++) {
@@ -22,5 +22,5 @@ class FieldPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

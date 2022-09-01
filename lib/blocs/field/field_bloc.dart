@@ -50,7 +50,7 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
     ));
   }
 
-  void _onUpdateField(UpdateFieldEvent event, Emitter<FieldState> emit) {
+  void _onUpdateField(UpdateFieldEvent event, Emitter<FieldState> emit) async {
     if (state.status != FieldStatus.playing) return;
 
     List<List<GameCell>> newField = List.filled(fieldHeight, []);

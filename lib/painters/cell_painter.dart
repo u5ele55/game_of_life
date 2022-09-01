@@ -9,11 +9,11 @@ class CellPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = Color.fromARGB(255, 119, 16, 94)
+      ..color = const Color.fromARGB(255, 119, 16, 94)
       ..style = PaintingStyle.fill;
     for (int i = 0; i < (field.field?.length ?? 0); i++) {
       for (int j = 0; j < (field.field?[i].length ?? 0); j++) {
-        final cell = field.get(Position(x: j, y: i));
+        final cell = field.field?[i][j];
         if (cell != null && cell.isAlive) {
           canvas.drawRect(
               Offset(j * cellSize, i * cellSize) &
@@ -25,5 +25,5 @@ class CellPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
