@@ -5,7 +5,7 @@ class FieldPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = const Color(0xff995588)
+      ..color = lineColor
       ..strokeWidth = 2;
 
     for (int i = 1; i < fieldWidth; i++) {

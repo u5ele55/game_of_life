@@ -4,7 +4,6 @@ library zoom_widget;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:zoom_widget/MultiTouchGestureRecognizer.dart';
 
 class Zoom extends StatefulWidget {
   final double maxZoomWidth, maxZoomHeight;
@@ -344,6 +343,14 @@ class _ZoomState extends State<Zoom> with TickerProviderStateMixin {
 
                   widget.onPointTap!(relativeMidlePoint);
                 }
+              };
+              instance.onTapDown = (details) {
+                midlePoint = details.localPosition;
+                relativeMidlePoint = Offset(
+                    ((auxLeft + localLeft + centerLeft) * -1 + midlePoint.dx) *
+                        (1 / scale),
+                    ((auxTop + localTop + centerTop) * -1 + midlePoint.dy) *
+                        (1 / scale));
               };
             }),
           },

@@ -9,7 +9,7 @@ class CellPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = const Color.fromARGB(255, 119, 16, 94)
+      ..color = cellColor
       ..style = PaintingStyle.fill;
     for (int i = 0; i < (field.field?.length ?? 0); i++) {
       for (int j = 0; j < (field.field?[i].length ?? 0); j++) {

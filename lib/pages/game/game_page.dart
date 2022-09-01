@@ -8,7 +8,6 @@ import 'package:game_of_life/models/field.dart';
 import 'package:game_of_life/painters/cell_painter.dart';
 import 'package:game_of_life/painters/field_painter.dart';
 import 'package:game_of_life/widgets/zoom_widget.dart' as my;
-import 'package:zoom_widget/zoom_widget.dart';
 
 part 'game_view.dart';
 
