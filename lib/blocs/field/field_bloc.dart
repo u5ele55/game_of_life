@@ -30,7 +30,8 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
   void _onTapCell(TapCellEvent event, Emitter<FieldState> emit) {
     if (state.status == FieldStatus.stopped) {
       emit(state.copyWith(
-        field: state.field..toggleCell(event.cell),
+        field: state.field
+          ..toggleCell(state.field.get(event.position) ?? GameCell()),
       ));
     }
   }
@@ -49,7 +50,7 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
     ));
   }
 
-  void _onUpdateField(UpdateFieldEvent event, Emitter<FieldState> emit) {
+  void _onUpdateField(UpdateFieldEvent event, Emitter<FieldState> emit) async {
     if (state.status != FieldStatus.playing) return;
 
     List<List<GameCell>> newField = List.filled(fieldHeight, []);
@@ -59,13 +60,15 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
         final position = Position(x: j, y: i);
         GameCell cell = state.field.get(position) ?? GameCell();
         int aliveNeighbours = state.field.aliveNeighbours(cell);
-        newField[i][j] = cell;
-        if (cell.isAlive && (aliveNeighbours == 2 || aliveNeighbours == 3)) {
-          continue;
-        } else if (!cell.isAlive && aliveNeighbours == 3) {
-          newField[i][j].isAlive = true;
+        newField[i][j] = cell.copy();
+        if (cell.isAlive) {
+          if (aliveNeighbours <= 1 || aliveNeighbours >= 4) {
+            newField[i][j].isAlive = false;
+          }
         } else {
-          newField[i][j].isAlive = false;
+          if (aliveNeighbours == 3) {
+            newField[i][j].isAlive = true;
+          }
         }
       }
     }

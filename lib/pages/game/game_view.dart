@@ -15,60 +15,68 @@ class _GameViewState extends State<GameView> {
         (Timer t) => context.read<FieldBloc>().add(UpdateFieldEvent()));
   }
 
+  bool showField = false;
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FieldBloc, FieldState>(
-      builder: (context, state) {
-        if (state.status == FieldStatus.initial) {
-          return const Center(child: CircularProgressIndicator.adaptive());
-        }
-        return Stack(
-          children: [
-            Zoom(
-              maxZoomWidth: constants.cellSize * constants.fieldWidth,
-              maxZoomHeight: constants.cellSize * constants.fieldHeight,
-              doubleTapZoom: false,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                    children: (state.field.field ?? [])
-                        .map((list) => SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              physics: const NeverScrollableScrollPhysics(),
-                              child: Row(
-                                children: list
-                                    .map((cell) => CellWidget(cell: cell))
-                                    .toList(),
-                              ),
-                            ))
-                        .toList()),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Row(
+    return BlocListener<FieldBloc, FieldState>(
+        listener: (context, state) {
+          if (state.status != FieldStatus.initial) {
+            setState(() => showField = true);
+          }
+        },
+        listenWhen: (previous, current) => previous.status != current.status,
+        child: showField
+            ? Stack(
                 children: [
-                  IconButton(
-                    icon: state.status == FieldStatus.playing
-                        ? const Icon(Icons.pause)
-                        : const Icon(Icons.play_arrow),
-                    onPressed: () =>
-                        context.read<FieldBloc>().add(ToggleStatusEvent()),
-                    iconSize: 64,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () =>
-                        context.read<FieldBloc>().add(InitFieldEvent()),
-                    iconSize: 64,
+                  my.Zoom(
+                      opacityScrollBars: 0,
+                      maxZoomWidth: constants.cellSize * constants.fieldWidth,
+                      maxZoomHeight: constants.cellSize * constants.fieldHeight,
+                      doubleTapZoom: false,
+                      onPointTap: (details) {
+                        context.read<FieldBloc>().add(TapCellEvent(
+                            Position.fromOffset(
+                                details ~/ constants.cellSize)));
+                      },
+                      child: SizedBox(
+                        height: constants.fieldHeight * constants.cellSize,
+                        width: constants.fieldWidth * constants.cellSize,
+                        child: BlocBuilder<FieldBloc, FieldState>(
+                          builder: (_, state) {
+                            return CustomPaint(
+                              foregroundPainter: FieldPainter(),
+                              painter: CellPainter(state.field),
+                            );
+                          },
+                        ),
+                      )),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Row(
+                      children: [
+                        BlocBuilder<FieldBloc, FieldState>(
+                          builder: (_, state) => IconButton(
+                            icon: state.status == FieldStatus.playing
+                                ? const Icon(Icons.pause)
+                                : const Icon(Icons.play_arrow),
+                            onPressed: () => context
+                                .read<FieldBloc>()
+                                .add(ToggleStatusEvent()),
+                            iconSize: 64,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          onPressed: () =>
+                              context.read<FieldBloc>().add(InitFieldEvent()),
+                          iconSize: 64,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
+              )
+            : const Center(child: CircularProgressIndicator.adaptive()));
   }
 }
